@@ -40,7 +40,8 @@ const htmlTypesRE = /\.(html|vue|svelte)$/
 export const importsRE =
   /(?<!\/\/.*)(?<=^|;|\*\/)\s*import(?!\s+type)(?:[\w*{}\n\r\t, ]+from\s*)?\s*("[^"]+"|'[^']+')\s*(?=$|;|\/\/|\/\*)/gm
 
-const multilineCommentsRE = /\/\*(.|[\r\n])*?\*\//gm
+export const multilineCommentsRE = /\/\*(.|[\r\n])*?\*\//gm
+export const singlelineCommentsRE = /\/\/.*/g
 
 export async function scanImports(config: ResolvedConfig): Promise<{
   deps: Record<string, string>
@@ -79,7 +80,9 @@ export async function scanImports(config: ResolvedConfig): Promise<{
   )
 
   if (!entries.length) {
-    debug(`No entry HTML files detected`)
+    config.logger.warn(
+      'Could not determine entry point from rollupOptions or html files. Skipping dependency pre-bundling.'
+    )
     return { deps: {}, missing: {} }
   } else {
     debug(`Crawling dependencies using entries:\n  ${entries.join('\n  ')}`)
@@ -133,6 +136,7 @@ const scriptModuleRE =
 export const scriptRE = /(<script\b(?:\s[^>]*>|>))(.*?)<\/script>/gims
 export const commentRE = /<!--(.|[\r\n])*?-->/
 const srcRE = /\bsrc\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s'">]+))/im
+const typeRE = /\btype\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s'">]+))/im
 const langRE = /\blang\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s'">]+))/im
 
 function esbuildScanPlugin(
@@ -159,7 +163,11 @@ function esbuildScanPlugin(
   }
 
   const include = config.optimizeDeps?.include
-  const exclude = config.optimizeDeps?.exclude
+  const exclude = [
+    ...(config.optimizeDeps?.exclude || []),
+    '@vite/client',
+    '@vite/env'
+  ]
 
   const externalUnlessEntry = ({ path }: { path: string }) => ({
     path,
@@ -205,9 +213,23 @@ function esbuildScanPlugin(
           while ((match = regex.exec(raw))) {
             const [, openTag, content] = match
             const srcMatch = openTag.match(srcRE)
+            const typeMatch = openTag.match(typeRE)
             const langMatch = openTag.match(langRE)
+            const type =
+              typeMatch && (typeMatch[1] || typeMatch[2] || typeMatch[3])
             const lang =
               langMatch && (langMatch[1] || langMatch[2] || langMatch[3])
+            // skip type="application/ld+json" and other non-JS types
+            if (
+              type &&
+              !(
+                type.includes('javascript') ||
+                type.includes('ecmascript') ||
+                type === 'module'
+              )
+            ) {
+              continue
+            }
             if (lang === 'ts' || lang === 'tsx' || lang === 'jsx') {
               loader = lang
             }
@@ -218,6 +240,10 @@ function esbuildScanPlugin(
               js += content + '\n'
             }
           }
+          // empty singleline & multiline comments to avoid matching comments
+          const code = js
+            .replace(multilineCommentsRE, '/* */')
+            .replace(singlelineCommentsRE, '')
 
           if (
             loader.startsWith('ts') &&
@@ -230,8 +256,6 @@ function esbuildScanPlugin(
             // the solution is to add `import 'x'` for every source to force
             // esbuild to keep crawling due to potential side effects.
             let m
-            // empty multiline comments to avoid matching commented out imports
-            const code = js.replace(multilineCommentsRE, '/* */')
             while ((m = importsRE.exec(code)) != null) {
               // This is necessary to avoid infinite loops with zero-width matches
               if (m.index === importsRE.lastIndex) {
@@ -241,11 +265,11 @@ function esbuildScanPlugin(
             }
           }
 
-          if (!js.includes(`export default`)) {
+          if (!code.includes(`export default`)) {
             js += `\nexport default {}`
           }
 
-          if (js.includes('import.meta.glob')) {
+          if (code.includes('import.meta.glob')) {
             return {
               // transformGlob already transforms to js
               loader: 'js',

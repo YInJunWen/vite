@@ -1,3 +1,59 @@
+## [2.5.1](https://github.com/vitejs/vite/compare/v2.5.0...v2.5.1) (2021-08-24)
+
+
+### Bug Fixes
+
+* __DEFINES__ is not defined is env ([#4694](https://github.com/vitejs/vite/issues/4694)) ([ff50c22](https://github.com/vitejs/vite/commit/ff50c22f9c71ac968f0fc4503e892452ccdf5ef5))
+* `Matcher` for chokidar WatchOptions#ignored ([#4616](https://github.com/vitejs/vite/issues/4616)) ([89e7a41](https://github.com/vitejs/vite/commit/89e7a419d7108dc3344d0bc5690798f695a46fd1))
+* enable failing dependencies to be optimised by pre-processing them with esbuild ([#4275](https://github.com/vitejs/vite/issues/4275)) ([ea98a1a](https://github.com/vitejs/vite/commit/ea98a1a1d257d235d3f12948d049c66e6a941362))
+* **css:** minify css will transform rgba to #rrggbbaa ([#4658](https://github.com/vitejs/vite/issues/4658)) ([632a50a](https://github.com/vitejs/vite/commit/632a50acd693f4ba79af7d22f1df14cf20e66538))
+* CSS dependencies are tracked incorrectly when base is set ([#4592](https://github.com/vitejs/vite/issues/4592)) ([633c03a](https://github.com/vitejs/vite/commit/633c03aa05755da47c2f2e00aa52f3f6460ac382))
+* **css:** dynamic import css abnormal after build ([#3333](https://github.com/vitejs/vite/issues/3333)) ([b572f57](https://github.com/vitejs/vite/commit/b572f57ec067abfaa1355cab3efdadf306592202))
+* **scan:** do not match 'export default' in comments ([#4602](https://github.com/vitejs/vite/issues/4602)) ([8b85f5f](https://github.com/vitejs/vite/commit/8b85f5f5cc72b8d50416ab0ab5ae045119e944be))
+* **vite:** unexptected overwriting for default export fix([#4553](https://github.com/vitejs/vite/issues/4553)) ([#4596](https://github.com/vitejs/vite/issues/4596)) ([c7929ad](https://github.com/vitejs/vite/commit/c7929ad1f96f1dd4f59e55626cedd6254add8538))
+* surface exception when failing to resolve package entry ([#4426](https://github.com/vitejs/vite/issues/4426)) ([f75e508](https://github.com/vitejs/vite/commit/f75e5080c0e479c4b8d66f48da06417e0a180016))
+
+
+### Features
+
+* Add `ssr.noExternal = true` option ([#4490](https://github.com/vitejs/vite/issues/4490)) ([963387a](https://github.com/vitejs/vite/commit/963387adbbceaf0336f8b4c9661f76511c0094ac))
+* make redirect easier when visit a non-based page ([#4618](https://github.com/vitejs/vite/issues/4618)) ([b97afa7](https://github.com/vitejs/vite/commit/b97afa76ec0b6ccd6e7dd99a254e109f67692bf7))
+
+
+
+# [2.5.0](https://github.com/vitejs/vite/compare/v2.5.0-beta.3...v2.5.0) (2021-08-16)
+
+
+
+# [2.5.0-beta.3](https://github.com/vitejs/vite/compare/v2.5.0-beta.2...v2.5.0-beta.3) (2021-08-14)
+
+
+### Bug Fixes
+
+* add ?inline css query typings ([#4570](https://github.com/vitejs/vite/issues/4570)) ([c8a17a2](https://github.com/vitejs/vite/commit/c8a17a23de4cde5d8d523ebc1b437e5b191446dd))
+* skip optimizer run on non-JS script tags ([#4565](https://github.com/vitejs/vite/issues/4565)) ([270bd3a](https://github.com/vitejs/vite/commit/270bd3a72dbf8dfb839909545659dde1d14e1e38))
+* support dangling comma and throw on circular dependency in tsconfig ([#4590](https://github.com/vitejs/vite/issues/4590)) ([f318416](https://github.com/vitejs/vite/commit/f3184161fde7df614b584520ddef5d7f049a5ff0))
+
+
+
+# [2.5.0-beta.2](https://github.com/vitejs/vite/compare/v2.5.0-beta.1...v2.5.0-beta.2) (2021-08-09)
+
+
+### Bug Fixes
+
+* **client:** vite-error-overlay customElement is registered twice ([#4475](https://github.com/vitejs/vite/issues/4475)) ([28a9612](https://github.com/vitejs/vite/commit/28a9612d65f9004d6a3c698f86f7b22796347768))
+* add missing assets to `packages/vite/client.d.ts` ([#4516](https://github.com/vitejs/vite/issues/4516)) ([420d82d](https://github.com/vitejs/vite/commit/420d82dc31c930fd82c28612e3dd864f35278503))
+* avoid crash when a file imported in SCSS does not exist ([#4505](https://github.com/vitejs/vite/issues/4505)) ([a03e944](https://github.com/vitejs/vite/commit/a03e94419ef4da3b842f0211536afb1501bc0919))
+
+
+### Features
+
+* add asset name ([#3028](https://github.com/vitejs/vite/issues/3028)) ([#3050](https://github.com/vitejs/vite/issues/3050)) ([a055938](https://github.com/vitejs/vite/commit/a05593894bb76ac46897c6833dffed04de71b960))
+* import `.webmanifest` assets as URL ([#4515](https://github.com/vitejs/vite/issues/4515)) ([8c5ac3f](https://github.com/vitejs/vite/commit/8c5ac3f89c69717b3bddedc229b77fabb9239085))
+* log a warning if dependency pre-bundling cannot be run ([#4546](https://github.com/vitejs/vite/issues/4546)) ([120f3b9](https://github.com/vitejs/vite/commit/120f3b97456597998b29413e8eec5e7ad41f2e7a))
+
+
+
 # [2.5.0-beta.1](https://github.com/vitejs/vite/compare/v2.5.0-beta.0...v2.5.0-beta.1) (2021-08-04)
 
 

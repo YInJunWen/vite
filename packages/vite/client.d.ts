@@ -161,6 +161,10 @@ declare module '*.webmanifest' {
   const src: string
   export default src
 }
+declare module '*.pdf' {
+  const src: string
+  export default src
+}
 
 // web worker
 declare module '*?worker' {
@@ -190,6 +194,11 @@ declare module '*?raw' {
 }
 
 declare module '*?url' {
+  const src: string
+  export default src
+}
+
+declare module '*?inline' {
   const src: string
   export default src
 }
